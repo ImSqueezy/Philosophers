@@ -1,53 +1,38 @@
 #include "philo.h"
 
-// parser will take the argmunets
-// store the data on smth, and checks for errors
-//		- number of philos & forks
-//		- time to die
-//		- time to eat
-//		- time to sleep
-//		- number of meats
-
-typedef struct info
+int	parser(t_info *info, int ac, char **argv)
 {
-	int	forks;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	number_of_meats;
-} t_info;
+	int	i;
+	int	data;
 
-void	fill(int flag, int num, t_info *info)
-{
-	if (flag == 1)
-		(*info).forks = num;
-	else if (flag == 2)
-		(*info).time_to_die = num;
-	else if (flag == 3)
-		(*info).time_to_eat = num;
-	else if (flag == 4)
-		(*info).time_to_sleep = num;
-	else if (flag == 5)
-		(*info).number_of_meats = num;
+	if (ac != 5 && ac != 6)
+		return (printf("%s", USAGE_ERROR), 0);
+	i = 0;
+	while (++i < ac)
+	{
+		data = arg_checker(argv[i]);
+		if (data == -1)
+			return (printf("%s", ARGS_ERROR), 0);
+		else
+			fill(i, data, info);
+	}
+	if ((*info).forks == INT_MIN)
+		return (printf("%s", RANGE_ERROR), 0);
+	if (i < 6)
+		(*info).number_of_meats = -1;
+	(*info).status = 0;
+	(*info).index = 0;
+	return (1);
 }
 
 int main(int argc, char **argv)
 {
-	t_info	info;
-	int		i;
-	int		data;
+	t_info		info;
 
-	if (argc != 5 && argc != 6)
-		return (printf("Error: Invalid number of args!"), 1);
-	i = 0;
-	while (++i < argc)
+	if (parser(&info, argc, argv))
 	{
-		data = arg_checker(argv[i]);
-		if (!data)
-			return (printf("Error: Invalid args!"), 0);
-		else
-			fill(i, data, &info);
+		// must initialize the philo struct 
+		initializer();
 	}
-	printf("forks %d time_to_die %d time_to_eat %d time_to_sleep %d number_of_meats %d\n", info.forks, info.time_to_die ,info.time_to_eat, info.time_to_sleep, info.number_of_meats);
 	return (0);
 }
