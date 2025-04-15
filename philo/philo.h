@@ -4,29 +4,30 @@
 # include <stdio.h>
 # include <limits.h>
 # include <pthread.h>
-# include <unistd.h>
+# include <stdlib.h>
 
 typedef struct s_philo
 {
-	int	number_of_meals;
-	int	right;
-	int	left;
-	int	meal_count;
-	int	philo_order;
-	t_info	*info;
+	int				id;
+	int				last_meal;
+	int				number_of_meals;
+	int				right;
+	int				left;
+	pthread_t		thread;
+	struct s_info	*data;
 } t_philo;
 
-typedef struct info
+typedef struct s_info
 {
-	int	forks;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	number_of_meats;
-	int	status; // time of death
-	int	index; // index of the philo
-	t_philo	philo[200];
-} t_info;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				meals;
+	int				philos;
+	int				start;
+	t_philo			philo[200];
+	pthread_mutex_t	forks[200];
+}	t_info;
 
 # define ARGS_ERROR "Invalid arg!\n"
 # define USAGE_ERROR "Usage: ./philo number_of_philos time_to_die time_to_eat \
@@ -35,7 +36,6 @@ time_to_sleep [number_of_meats]\n"
 
 
 void	fill(int flag, int num, t_info *info);
-int		arg_checker(char *arg);
-long	ft_atoi(char *str);
+int		arg_checker(char *arg, int flag);
 
 #endif

@@ -1,6 +1,20 @@
 #include "philo.h"
 
-long	ft_atoi(char *str)
+static char	*till_digit(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= '0' && str[i] <= '9')
+			return (str + i);
+		i++;
+	}
+	return (str);
+}
+
+static long	ft_atoi(char *str)
 {
 	long	res;
 	int		sign;
@@ -32,7 +46,7 @@ long	ft_atoi(char *str)
 void	fill(int flag, int num, t_info *info)
 {
 	if (flag == 1)
-		(*info).forks = num;
+		(*info).philos = num;
 	else if (flag == 2)
 		(*info).time_to_die = num;
 	else if (flag == 3)
@@ -40,23 +54,24 @@ void	fill(int flag, int num, t_info *info)
 	else if (flag == 4)
 		(*info).time_to_sleep = num;
 	else if (flag == 5)
-		(*info).number_of_meats = num;
+		(*info).meals = num;
 }
 
-int	arg_checker(char *arg)
+int	arg_checker(char *arg, int flag)
 {
 	int	data;
 	int	i;
 
 	i = 0;
+	data = ft_atoi(arg);
+	if (data == 0 && flag != 5)
+		return (-1);
+	arg = till_digit(arg);
 	while (arg[i])
 	{
-		if (!(arg[i] >= '0' && arg[i] <= '9') && arg[i] != '-' && arg[i] != '+')
-			return (0);
+		if (!(arg[i] >= '0' && arg[i] <= '9'))
+			return (-1);
 		i++;
 	}
-	data = ft_atoi(arg);
-	if (data < 0)
-		return (-1);
 	return (data);
 }
