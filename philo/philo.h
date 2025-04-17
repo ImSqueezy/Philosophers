@@ -27,6 +27,8 @@ typedef struct s_info
 	int				start;
 	t_philo			philo[200];
 	pthread_mutex_t	forks[200];
+	pthread_mutex_t	meal;
+	pthread_mutex_t	print;
 }	t_info;
 
 # define ARGS_ERROR "Invalid arg!\n"

@@ -7,6 +7,7 @@ int	parser(t_info *info, int ac, char **argv)
 
 	if (ac != 5 && ac != 6)
 		return (printf("%s", USAGE_ERROR), 0);
+	(*info).meals = 0;
 	i = 0;
 	while (++i < ac)
 	{
@@ -18,15 +19,41 @@ int	parser(t_info *info, int ac, char **argv)
 	}
 	if ((*info).philos == INT_MIN)
 		return (printf("%s", RANGE_ERROR), 0);
-	if (i < 6)
-		(*info).meals = -1;
 	return (1);
 }
 
-// void	initializer()
-// {
+void	initializer(t_info *data)
+{
+	int	i;
 
-// }
+	i = 0;
+	if (pthread_mutex_init(&data->meal, NULL))
+		printf("Mutex initialization failed\n");
+	if (pthread_mutex_init(&data->print, NULL))
+		printf("Mutex initialization failed\n");
+	while (i < data->philos)
+	{
+		if (pthread_mutex_init(&data->forks[i], NULL))
+			printf("Mutex initialization failed\n");
+		i++;
+	}
+
+}
+
+void	create_philo(t_info *info)
+{
+	int		i;
+
+	i = 0;
+	while (i < (*info).philos)
+	{
+		(*info).philo[i].id = i;
+		(*info).philo[i].right = i;
+		(*info).philo[i].left = (i + 1) & (*info).philos;
+		(*info).
+		i++;
+	}
+}
 
 int main(int argc, char **argv)
 {
@@ -34,9 +61,7 @@ int main(int argc, char **argv)
 
 	if (parser(&info, argc, argv))
 	{
-		// will initialize with that the mutexes, data and create and join threads
-		// initializer();
-		printf("success");
+		initializer(&info);
 	}
 	return (0);
 }
